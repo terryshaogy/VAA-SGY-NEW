@@ -1,0 +1,328 @@
+---
+title: "Take-home"
+---
+
+# 1.0 Preparation the Analytical Visualization.
+
+### 1.1: Import and read file.
+
+```{r}
+pacman::p_load(tidyverse,haven)
+stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT == "SGP")
+
+write_rds(stu_qqq_SG,
+          "data/stu_qqq_SG.rds")
+
+stu_qqq_SG <- 
+  read_rds("data/stu_qqq_SG.rds")
+```
+
+### 1.2: Install R-package
+
+```{r}
+
+pacman::p_load(ggrepel,
+               patchwork,
+               ggthemes,
+               hrbrthemes,
+               tidyverse)
+```
+
+### 1.3 Data cleaning
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+stu_qqq_SG <- stu_qqq_SG %>%
+  rowwise() %>%
+  mutate(READING_ave = mean(c_across(PV1READ:PV10READ), na.rm = TRUE))
+```
+
+```{r}
+stu_qqq_SG <- stu_qqq_SG %>%
+  rowwise() %>%
+  mutate(SCIENCE_ave = mean(c_across(PV1SCIE:PV10SCIE), na.rm = TRUE))
+```
+
+```{r}
+stu_qqq_SG <- stu_qqq_SG %>%
+  rowwise() %>%
+  mutate(MATH_ave = mean(c_across(PV1MCUD:PV10MCUD), na.rm = TRUE))
+```
+
+# 2.0 Visualization.
+
+## ***2.1 The distribution of Singapore students' performance in mathematics, reading, and science.***
+
+### Summary: From the distribution plot provided, reading, math, and science all show a standard normal distribution pattern, indicating that in each subject, the PV of students is concentrated around a central value (around 500 points), and does not show significant bias or outliers. This distribution pattern means that there are a small number of very high or very low achieving students in each subject, while most students' achievement is clustered around the average.
+
+```{r}
+#| echo: true
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse) 
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p1<-ggplot(data=stu_qqq_SG,
+       aes(READING_ave))+
+  geom_histogram()+
+  ggtitle("Distribution of Reading_PV")+
+  coord_cartesian(ylim=c(0,600),
+                  xlim=c(0,1000)) +
+  theme_economist()
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p2<-ggplot(data=stu_qqq_SG,
+       aes(MATH_ave))+
+  geom_histogram()+
+  ggtitle("Distribution of Math_PV")+
+  coord_cartesian(ylim=c(0,600),
+                  xlim=c(0,1000)) +
+  theme_economist()
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p3<-ggplot(data=stu_qqq_SG,
+       aes(SCIENCE_ave))+
+  geom_histogram()+
+  ggtitle("Distribution of Science_PV")+
+  coord_cartesian(ylim=c(0,600),
+                  xlim=c(0,1000)) +
+  theme_economist()
+```
+
+```{r fig.width=10, fig.height=10}
+#| echo: false
+p1 / p2 / p3
+```
+
+## ***2.2 The relationship between the performances of Math,Reading and Science with different Gender.***
+
+### Summary: As can be seen from the boxplot, there is little difference between the average scores of male and female students in science, and the average and median scores of male and female students are similar. In reading, women's average and median scores were slightly higher than men's. In contrast, when it comes to math scores, men have slightly higher average and median scores than women.
+
+```{r fig.show='hide'}
+#| echo: false
+stu_qqq_SG <- stu_qqq_SG %>%
+  mutate(GENDER = case_when(
+    ST004D01T == 1 ~ "female",
+    ST004D01T == 2 ~ "male"
+  ))
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p4<-ggplot(data=stu_qqq_SG,
+       aes(READING_ave,
+           GENDER
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=4)
+
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p5<-ggplot(data=stu_qqq_SG,
+       aes(MATH_ave,
+           GENDER
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=4)
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p6<-ggplot(data=stu_qqq_SG,
+       aes(SCIENCE_ave,
+           GENDER
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=4)
+```
+
+```{r fig.height=7,fig.width=10}
+#| echo: false
+p4 / p5 / p6
+```
+
+## ***2.3 The relationship between the performances of Math,Reading and Science with different School.***
+
+### Summary: This dot plot shows that the majority of the schools remain average, but it is true that some schools have higher quality teaching and their students have better results and PV.
+
+```{r fig.show='hide'}
+#| echo: false
+p7<-ggplot(data=stu_qqq_SG,
+       aes(x=CNTSCHID,
+           y=MATH_ave)) +
+  geom_point()
+```
+
+```{r fig.show='hide'}
+#| echo: false
+p8<-ggplot(data=stu_qqq_SG,
+       aes(x=CNTSCHID,
+           y=READING_ave)) +
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p9<-ggplot(data=stu_qqq_SG,
+       aes(x=CNTSCHID,
+           y=SCIENCE_ave)) +
+  geom_point()
+```
+
+```{r fig.height=10,fig.width=10}
+#| echo: false
+p7 / p8 /p9
+```
+
+## ***2.4 The relationship between the performances of Math,Reading and Science with different Socioeconomic.***
+
+### Summary: This plot shows that whether it is science, math or reading, it is related to whether there is money to have food. Students who have enough money to get food will get better grades. These students do not need to think about food. Students who ate for lack of money four or five times a week had lower high scores and higher low scores. These students usually did not have bad grades, but they were also hard to have good grades, indicating that ***Socioeconomic*** has a strong influence on ***performances of Math,Reading and Science***.
+
+```{r}
+#| echo: false
+stu_qqq_SG <- stu_qqq_SG %>%
+  mutate(FOOD = case_when(
+    ST258Q01JA == 1 ~ "almost never",
+    ST258Q01JA == 2 ~ "once a week",
+    ST258Q01JA == 3 ~ "2or3 times a week",
+    ST258Q01JA == 4 ~ "4or5 times a week",
+    ST258Q01JA == 5 ~ "alomst everday"
+  ))
+```
+
+```{r}
+#| echo: false
+p10<-ggplot(data=stu_qqq_SG,
+       aes(FOOD,
+           MATH_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p11<-ggplot(data=stu_qqq_SG,
+       aes(FOOD,
+           SCIENCE_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p12<-ggplot(data=stu_qqq_SG,
+       aes(FOOD,
+           READING_ave))+
+  geom_point()
+```
+
+```{r fig.width=10, fig.height=10}
+#| echo: false
+p10 / p11 / p12
+```
+
+## ***2.5 The relationship between the performances of Math,Reading and Science with different Socioeconomic.***
+
+### Summary: This plot indicates that science, math and reading are all related to students' parents' education background. Students with highly educated parents will get higher scores, and such students will have greater advantages, indicating that ***Socioeconomic*** has a strong influence on ***performances of Math,Reading and Science***.
+
+```{r}
+#| echo: false
+stu_qqq_SG <- stu_qqq_SG %>%
+  mutate(father_edu = case_when(
+    ST007Q01JA == 1 ~ "3.4",
+    ST007Q01JA == 2 ~ "3.3",
+    ST007Q01JA == 3 ~ "2",
+    ST007Q01JA == 4 ~ "1",
+    ST007Q01JA == 5 ~ "Not complete level 1"
+  ))
+```
+
+```{r}
+#| echo: false
+p13<-ggplot(data=stu_qqq_SG,
+       aes(father_edu,
+           MATH_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p14<-ggplot(data=stu_qqq_SG,
+       aes(father_edu,
+           READING_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p15<-ggplot(data=stu_qqq_SG,
+       aes(father_edu,
+           SCIENCE_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+stu_qqq_SG <- stu_qqq_SG %>%
+  mutate(mother_edu = case_when(
+    ST005Q01JA == 1 ~ "3.4",
+    ST005Q01JA == 2 ~ "3.3",
+    ST005Q01JA == 3 ~ "2",
+    ST005Q01JA == 4 ~ "1",
+    ST005Q01JA == 5 ~ "Not complete level 1"
+  ))
+```
+
+```{r}
+#| echo: false
+p16<-ggplot(data=stu_qqq_SG,
+       aes(mother_edu,
+           MATH_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p17<-ggplot(data=stu_qqq_SG,
+       aes(mother_edu,
+           READING_ave))+
+  geom_point()
+```
+
+```{r}
+#| echo: false
+p18<-ggplot(data=stu_qqq_SG,
+       aes(mother_edu,
+           SCIENCE_ave))+
+  geom_point()
+```
+
+```{r fig.height=10,fig.width=10}
+#| echo: false
+
+(p13 / p14 /p15) | (p16/p17/p18)
+```

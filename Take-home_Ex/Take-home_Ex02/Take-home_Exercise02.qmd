@@ -1,0 +1,885 @@
+---
+title: "Take-Home Exercise 2"
+Creating data visualisation beyond default: peer critique and visualization remake of take-home exercise 1.
+author: "Chai Zhixuan"
+date: 2024-01-13
+date-format: long
+date-modified: "last-modified"
+---
+
+# 1 Overview
+
+Social capital is a crucial element in the educational landscape, intertwining with the functioning and success of schools. Defined as the networks, relationships, and social bonds that individuals and communities build, social capital plays a pivotal role in shaping the educational experiences of students. In the context of schools, it manifests through the connections between students, teachers, parents, and the wider community.
+
+# 2 Getting Started
+
+## 2.1 Objectives
+
+[PISA](https://www.oecd.org/pisa/) is the OECD's Programme for International Student Assessment. PISA measures 15-year-olds' ability to use their reading, mathematics and science knowledge and skills to meet real-life challenges.
+
+Initial results of PISA 2022 were released on 5 December 2023. 81 countries and economies took part in PISA 2022.
+
+[PISA 2022](https://www.oecd-ilibrary.org/docserver/18f73e4f-en.pdf?expires=1705144524&id=id&accname=guest&checksum=56D745B64C41665A554C01DDD7827E1A) shows that Singapore scored significantly higher than all other participating countries/economies in mathematics (575 points), reading (543 points) and science (561 points).
+
+In this take-home exercise, I will demonstrate on how to deploy appropriate **Exploratory Data Analysis (EDA)** methods and **ggplot2** functions to reveal:
+
+-   the distribution of Singapore students' performance in mathematics, reading, and science, and
+
+-   the relationship between these performances with schools, gender and socioeconomic status of the students.
+
+A total of not more than 5 EDA will be created in this take-home exercise. This study will use the results from PISA 2022.
+
+## 2.2 The study area
+
+This will be in the context of Singapore. Survey questions are found in this [link](https://www.oecd.org/pisa/data/2022database/CY8_202111_QST_MS_STQ_CBA_NoNotes.pdf).
+
+## **2.3 Setting the Analytical Tools**
+
+I will use the following package:
+
+1.  haven: Import and Export 'SPSS', 'Stata' and 'SAS' Files
+2.  ggrepel: an R package provides geoms for ggplot2 to repel overlapping text labels.
+3.  ggthemes: an R package provides some extra themes, geoms, and scales for 'ggplot2'.
+4.  hrbrthemes: an R package provides typography-centric themes and theme components for ggplot2.
+5.  patchwork: an R package for preparing composite figure created using ggplot2.
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse, haven) 
+```
+
+# **3 Data Preparation**
+
+I will import the data from [here](https://www.oecd.org/pisa/data/2022database/)
+
+Step by Step on how to obtain the data is as shown below:
+
+1.  Go to <https://www.oecd.org/pisa/data/2022database/>
+2.  Scroll down and download the **Student questionnaire data file** only. Please ensure that the file downloaded is from the SAS (TM) Data Files (compressed) section.
+
+![](images/1-01.PNG)
+
+I will first import the file downloaded from PICA.
+
+```{r}
+#| eval: false
+stu.qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+I will filter the data to Singapore.
+
+```{r}
+#| eval: false
+stu_qqq_SG <- stu.qqq %>%
+  filter(CNT == "SGP")
+```
+
+I will save the data to rds format.
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG,
+          "data/stu_qqq_SG.rds")
+```
+
+I will read back the rds file.
+
+```{r}
+stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
+```
+
+## **3.1 Summary Statistics**
+
+I will first have a look at the data structure
+
+```{r}
+str(stu_qqq_SG)
+```
+
+There are are total of 6606 rows and 1279 columns.
+
+Further filter of data is needed.
+
+## **3.2 Extracting the study data**
+
+I will extract the following:
+
+1.  Gender: **ST004D01T**
+
+    ![](images/Male%20or%20Females.PNG){width="340"}
+
+2.  Socioeconomic Status: [ESCS](https://www.oecd-ilibrary.org/sites/1e412e2e-en/index.html?itemId=/content/component/1e412e2e-en#section-d1e19206-71ac67bf62)
+
+    ![](images/ESCS.PNG)
+
+3.  School: I will use **Expected Education Level** as the school. The reason is that in the PISA data, it is not meaningful to use the [current school level](https://www.oecd.org/pisa/pisafaq/#:~:text=PISA%20assesses%20students%20between%20the,at%20grade%207%20or%20higher.) (most of age 15 years old) and no information on the school name: **EXPECEDU**
+
+    ![](images/edu.PNG){width="536"}
+
+4.  Math score - **PV1MATH** to **PV10MATH**
+
+5.  Science score - **PV1SCIE** to **PV10SCIE**
+
+6.  Reading score - **PV1READ** to **PV10READ**
+
+```{r}
+
+stu_qqq_SG_1 <- stu_qqq_SG %>%
+select(ST004D01T,EXPECEDU, PV1MATH, PV2MATH,PV3MATH,PV4MATH,PV5MATH,PV6MATH,PV7MATH ,PV8MATH,PV9MATH,PV10MATH,PV1SCIE,PV2SCIE,PV3SCIE,PV4SCIE,PV5SCIE,PV6SCIE,PV7SCIE,PV8SCIE,PV9SCIE,PV10SCIE,PV1READ,PV2READ,PV3READ,PV4READ,PV5READ,PV6READ,PV7READ,PV8READ,PV9READ,PV10READ,ESCS)
+
+```
+
+I will save the data to rds format as well:
+
+```{r}
+
+write_rds(stu_qqq_SG_1,
+          "data/stu_qqq_SG_1.rds")
+```
+
+I will read back the rds file.
+
+```{r}
+stu_qqq_SG_1 <- read_rds("data/stu_qqq_SG_1.rds")
+```
+
+```{r}
+glimpse(stu_qqq_SG_1)
+```
+
+# 4 Data Wrangling
+
+## 4.1 Average of plausible values from subjects
+
+10 different values are given for the different subjects. I will need to find the average of [plausible values](https://nces.ed.gov/nationsreportcard/tdw/analysis/est_pv_individual.aspx).
+
+### 4.1.1 Math
+
+```{r}
+
+
+stu_qqq_SG_1 <- stu_qqq_SG_1 %>%
+  mutate(math_average = rowMeans(across(c(PV1MATH, PV2MATH, PV3MATH,PV4MATH,PV5MATH,PV6MATH,PV7MATH,PV8MATH,PV9MATH,PV10MATH))))
+```
+
+### 4.1.2 Science
+
+```{r}
+
+
+stu_qqq_SG_1 <- stu_qqq_SG_1 %>%
+  mutate(sci_average = rowMeans(across(c(PV1SCIE, PV2SCIE, PV3SCIE,PV4SCIE,PV5SCIE,PV6SCIE,PV7SCIE,PV8SCIE,PV9SCIE,PV10SCIE))))
+```
+
+### 4.1.3 Reading
+
+```{r}
+
+stu_qqq_SG_1 <- stu_qqq_SG_1 %>%
+  mutate(read_average = rowMeans(across(c(PV1READ, PV2READ, PV3READ, PV4READ, PV5READ, PV6READ, PV7READ, PV8READ, PV9READ, PV10READ))))
+```
+
+## 4.2 Rename of column headings
+
+I will rename some column for better reference
+
+```{r}
+
+stu_qqq_SG_1 <- stu_qqq_SG_1 %>%
+  rename(gender = ST004D01T, socioeconomic_status = ESCS, school = EXPECEDU)
+```
+
+I will now filter to the columns I want
+
+```{r}
+
+stu_qqq_SG_2 <- stu_qqq_SG_1 %>%
+select(gender, socioeconomic_status , school , math_average, sci_average, read_average)
+```
+
+I will save it do rds format as well
+
+```{r}
+
+write_rds(stu_qqq_SG_2,
+          "data/stu_qqq_SG_2.rds")
+
+```
+
+I will import back the rds file
+
+```{r}
+stu_qqq_SG_2 <- read_rds("data/stu_qqq_SG_2.rds")
+```
+
+```{r}
+glimpse(stu_qqq_SG_2)
+```
+
+## 4.3 Recode column information
+
+A closer look at the expected education reveals some confusion.
+
+![](images/questions.PNG)
+
+From the [link](https://gpseducation.oecd.org/Content/MapOfEducationSystem/GBR/GBR_2011_EN.pdf), I would need to map to the correct education level in Singapore
+
+![](images/level-01.PNG)
+
+| ISCED | Singapore         |
+|-------|-------------------|
+| 2     | Lower Secondary   |
+| 3     | Upper Secondary   |
+| 5     | Post Secondary    |
+| 6     | Diploma           |
+| 7     | Bachelor's Degree |
+| 8     | Master's Degree   |
+| 9     | PhD               |
+
+Now, I will recode the column information
+
+For gender:
+
+```{r}
+
+stu_qqq_SG_3 <- stu_qqq_SG_2 %>%
+  mutate(gender = case_when(
+    gender == "1" ~ "Female",
+    gender == "2" ~ "Male"))
+```
+
+```{r}
+
+summary(stu_qqq_SG_3)
+```
+
+For expected education
+
+```{r}
+
+stu_qqq_SG_3 <- stu_qqq_SG_3 %>%
+  mutate(school = case_when(
+    school == "2" ~ "Lower Sec",
+    school == "3" ~ "Upper Sec",
+    school == "5" ~ "Post Sec",
+    school == "6" ~ "Diploma",
+    school == "7" ~ "Degree",
+    school == "8" ~ "Masters",
+    school == "9" ~ "PhD"
+  ))
+```
+
+I will save the file to rds
+
+```{r}
+write_rds(stu_qqq_SG_3,
+          "data/stu_qqq_SG_3.rds")
+
+```
+
+I will import back the rds file
+
+```{r}
+stu_qqq_SG_3 <- read_rds("data/stu_qqq_SG_3.rds")
+```
+
+# 5 Exploratory Data Analysis
+
+Before I begin, I will the summary function to have a look at the results for the various subjects:
+
+```{r}
+summary(stu_qqq_SG_3)
+```
+
+I will make gender, and school as factors:
+
+```{r}
+stu_qqq_SG_3$gender <- as.factor(stu_qqq_SG_3$gender )
+
+stu_qqq_SG_3$school <- as.factor(stu_qqq_SG_3$school)
+```
+
+## 5.1 Histograms - Subjects
+
+Now I will plot the individual histograms for each subjects with the counts. After which, I will combine the histograms together to do a comparison across the subjects.
+
+**Math**
+
+::: panel-tabset
+## The plot
+
+```{r, echo=FALSE, warning=FALSE}
+#| eval: true
+p1 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = math_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Maths scores") +
+  labs(x = "Math Score")+
+  labs(y= "Number of students")
+
+p1
+```
+
+## The code
+
+```{r}
+#| eval: false
+p1 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = math_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Maths scores")+
+  labs(x = "Math Score")+
+  labs(y= "Number of students")
+```
+:::
+
+**Reading**
+
+::: panel-tabset
+## The plot
+
+```{r, echo=FALSE, warning=FALSE}
+#| eval: true
+p2 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = read_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Reading scores")+
+  labs(x = "Reading Score")+
+  labs(y= "Number of students")
+
+p2
+
+```
+
+## The code
+
+```{r}
+#| eval: false
+p2 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = read_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Reading scores")+
+  labs(x = "Reading Score")+
+  labs(y= "Number of students")
+
+```
+:::
+
+**Science**
+
+::: panel-tabset
+## The plot
+
+```{r, echo=FALSE, warning=FALSE}
+#| eval: true
+p3 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = sci_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Science scores")+
+  labs(x = "Science Score")+
+  labs(y= "Number of students")
+
+p3
+
+```
+
+## The code
+
+```{r}
+#| eval: false
+p3 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = sci_average)) +
+  geom_histogram(bins=20, 
+                 boundary = 100,
+                 color="darkblue",      
+                 fill="light blue") + 
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Histogram of Science scores")+
+  labs(x = "Math Score")+
+  labs(y= "Number of students")
+
+```
+:::
+
+Let me put all the plots together to compare now:
+
+::: panel-tabset
+## The plot
+
+```{r, echo=FALSE, warning=FALSE}
+#| eval: true
+
+(p1 / p2 / p3)
+```
+
+## The code
+
+```{r}
+#| eval: false
+
+(p1 / p2 / p3)
+
+```
+:::
+
+::: callout-note
+## Findings
+
+Comparing the 3 histograms, Math score is comparatively better as compared to Science and Reading score. Math score has an mean of 574, while Science has mean of 561 and Reading has a mean of 542.5.
+
+In addition, Math score seems to be symmetrically normally distributed. Science and Reading score seems to be left skewed normally distributed.
+:::
+
+# ***5.1.2 REMAKE:***
+
+### *Math & science & Reading*
+
+```{r, warning=FALSE}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+p1 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = math_average)) +
+  geom_histogram(bins = 10, boundary = 100, color = "blue", fill = "#3459e6")+
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("DIstribution of Maths scores") +
+  labs(x = "Math Score")+
+  labs(y= "Number of students")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  geom_vline(aes(xintercept=mean(stu_qqq_SG_3$math_average, na.rm = T)),
+             colour="red",
+             linewidth=1,
+             linetype="dashed") +
+  annotate("text",
+           x=450,
+           y=100,
+           label=paste("Mean =", round(mean(stu_qqq_SG_3$math_average, na.rm = T), 0)),
+           color="red",
+           size=4.5) 
+
+p2 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = read_average)) +
+  geom_histogram(bins = 10, boundary = 100, color = "blue", fill = "#3459e6")+
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Distribution of Reading scores")+
+  labs(x = "Reading Score")+
+  labs(y= "Number of students")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  geom_vline(aes(xintercept=mean(stu_qqq_SG_3$read_average, na.rm = T)),
+             colour="red",
+             linewidth=1,
+             linetype="dashed") +
+  annotate("text",
+           x=420,
+           y=100,
+           label=paste("Mean =", round(mean(stu_qqq_SG_3$read_average, na.rm = T), 0)),
+           color="red",
+           size=4.5)
+
+p3 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = sci_average)) +
+  geom_histogram(bins = 10, boundary = 100, color = "blue", fill = "#3459e6")+
+  coord_cartesian(xlim=c(0,900)) +
+  ggtitle("Distribution of Science scores")+
+  labs(x = "Science Score")+
+  labs(y= "Number of students")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  geom_vline(aes(xintercept=mean(stu_qqq_SG_3$sci_average, na.rm = T)),
+             colour="red",
+             linewidth=1,
+             linetype="dashed") +
+  annotate("text",
+           x=450,
+           y=100,
+           label=paste("Mean =", round(mean(stu_qqq_SG_3$sci_average, na.rm = T), 0)),
+           color="red",
+           size=4.5)
+```
+
+### *Total_average*
+
+```{r , warning=FALSE}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+stu_qqq_SG_3$total_average <- rowSums(stu_qqq_SG_3[, c("math_average", "sci_average", "read_average")], na.rm = TRUE)
+
+
+
+p4 <- ggplot(data=stu_qqq_SG_3, 
+             aes(x = total_average)) +
+  geom_histogram(bins = 10, boundary = 100, color = "blue", fill = "#3459e6")+ 
+  coord_cartesian(xlim=c(0,2300)) +
+  ggtitle("Gistribution of Total scores")+
+  labs(x = "Total Score")+
+  labs(y= "Number of students")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  geom_vline(aes(xintercept=mean(stu_qqq_SG_3$total_average, na.rm = T)),
+             colour="green",
+             linewidth=1,
+             linetype="dashed") +
+  annotate("text",
+           x=1350,
+           y=100,
+           label=paste("Mean =", round(mean(stu_qqq_SG_3$total_average, na.rm = T), 0)),
+           color="green",
+           size=4.5)
+p4
+```
+
+### **Remake Visualization**
+
+```{r fig.width=10, warning=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
+p1 + p2 +p3 +p4
+```
+
+### **Clarity:**
+
+1.  *Each histogram clearly shows the grade distribution, and users can easily understand the general trend of the data.*
+2.  *The addition of mean dotted lines and text labels is helpful for communicating the central location of each distribution, providing a quick reference.*
+3.  *The title of each histogram clearly indicates the type of achievement they represent.*
+4.  Adding the total variable to show more detail.
+
+### **Aesthetics:**
+
+1.  *The use of contrasting colors (blue histogram and red mean line) enhances the visual effect, making the mean stand out and easy to identify.*
+2.  *The placement and formatting of text labels look uniform, which helps maintain the overall consistency of the chart.*
+
+## 5.2 Boxplot - Gender and Subjects
+
+Now I will compare each subjects by the genders:
+
+::: panel-tabset
+## Math
+
+```{r, warning=FALSE,message=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(y = math_average,x= gender)) +    
+  geom_boxplot()+
+  geom_point(stat="summary",        
+             fun.y="mean",           
+             colour ="red",          
+             size=4) +
+  ggtitle("Boxplot of Math Score (by Gender)")+
+  labs(y = "Math Score")
+```
+
+## Reading
+
+```{r, warning=FALSE,message=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(y = read_average,       
+           x= gender)) +    
+  geom_boxplot()+
+  geom_point(stat="summary",        
+             fun.y="mean",           
+             colour ="red",          
+             size=4) +
+  ggtitle("Boxplot of Reading Score (by Gender)")+
+  labs(y = "Reading Score")
+```
+
+## Science
+
+```{r, warning=FALSE,message=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(y = sci_average,       
+           x= gender)) +    
+  geom_boxplot()+
+  geom_point(stat="summary",        
+             fun.y="mean",           
+             colour ="red",          
+             size=4) +
+  ggtitle("Boxplot of Science Score (by Gender)")+
+  labs(y = "Science Score")
+```
+:::
+
+::: callout-note
+## Findings
+
+From the boxplots above, Male's **math score** has a higher middle and mean as compared to Female's math score, However, Male's math score has a lower minimum value as compared to Female's math score.
+
+From the boxplots above, Male's **reading score** has a lower middle and mean as compared to Female's reading score. In addition, Male's reading score has a lower minimum value as compared to Female's reading score.
+
+From the boxplots above, Male's **science score** has a slightly higher middle and mean as compared to Female's science score, However, Male's science score has a lower minimum value as compared to Female's science score.
+:::
+
+# ***5.2.2 REMAKE***
+
+```{r, warning=FALSE}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+p4<-ggplot(data=stu_qqq_SG_3,
+       aes(read_average,
+           gender
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(color="blue")+
+  ggtitle("Boxplot of Read Score (by Gender)")+
+  labs(x = "Read Score")+
+  labs(y= "Gender")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  stat_summary(geom = "point", 
+               fun = "mean", 
+               colour = "red", 
+               size = 2)+
+    stat_summary(geom = "text", 
+               fun = "mean", 
+               colour = "red", 
+               size = 3, 
+               aes(label = round(..x.., 0)), 
+               vjust = -1.5,
+               hjust= -0.7)
+
+
+
+p5<-ggplot(data=stu_qqq_SG_3,
+       aes(math_average,
+           gender
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(color="blue")+
+  ggtitle("Boxplot of Math Score (by Gender)")+
+  labs(x = "Math Score")+
+  labs(y= "Gender")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=2)+
+  stat_summary(geom = "text", 
+               fun = "mean", 
+               colour = "red", 
+               size = 3, 
+               aes(label = round(..x.., 0)), 
+               vjust = -1.5,
+               hjust= -0.8)
+
+
+
+p6<-ggplot(data=stu_qqq_SG_3,
+       aes(sci_average,
+           gender
+           ))+
+  coord_cartesian(xlim=c(100,1000)) +
+  geom_boxplot(color="blue")+
+  ggtitle("Boxplot of Science Score (by Gender)")+
+  labs(x = "Science Score")+
+  labs(y= "Gender")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=2)+
+  stat_summary(geom = "text", 
+               fun = "mean", 
+               colour = "red", 
+               size = 3, 
+               aes(label = round(..x.., 0)), 
+               vjust = -1.5,
+               hjust= -0.7)
+
+
+
+p20<-ggplot(data=stu_qqq_SG_3,
+            aes(total_average,
+                gender
+                ))+
+  coord_cartesian(xlim = c(100,2200))+
+  geom_boxplot(color="green")+
+  ggtitle("Boxplot of Total Score (by Gender)")+
+  labs(x = "Total Score")+
+  labs(y= "Gender")+
+  theme_minimal()+
+  theme(text = element_text(size = 8),
+      plot.title = element_text(hjust = 0.5))+
+  stat_summary(geom = "point",       
+               fun="mean",         
+               colour ="red",        
+               size=2)+
+  stat_summary(geom = "text", 
+               fun = "mean", 
+               colour = "red", 
+               size = 3, 
+               aes(label = round(..x.., 0)), 
+               vjust = -1.5,
+               hjust= -0.7)
+
+```
+
+```{r, warning=FALSE}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+p4 + p5 +p6 +p20
+
+```
+
+### **Clarity:**
+
+1.  *Labels that increase the average value are good for readers to read*
+2.  *Putting the boxplot of the three disciplines together allows the reader to compare them.*
+3.  Adding the total variable to show more detail.
+
+### **Aesthetics**
+
+*Use contrasting colors (blue histogram and red mean line) to enhance the visual effect, making the mean stand out and easy to identify.*
+
+## 5.3 Bar graph - Expected Education and Subjects
+
+::: panel-tabset
+## Math
+
+```{r}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= math_average, 
+           fill = school)) +
+  geom_histogram(bins=20, 
+                 color="grey30")+
+  ggtitle("Distribution of Maths scores (by Expected School)")+
+  labs(x = "Math Score")+
+  labs(y= "Number of students")
+```
+
+## Reading
+
+```{r}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= read_average, 
+           fill = school)) +
+  geom_histogram(bins=20, 
+                 color="grey30")+
+  ggtitle("Distribution of Reading scores (by Expected School)")+
+  labs(x = "Reading Score")+
+  labs(y= "Number of students")
+```
+
+## Science
+
+```{r}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= sci_average, 
+           fill = school)) +
+  geom_histogram(bins=20, 
+                 color="grey30")+
+  ggtitle("Distribution of Science scores (by Expected School)")+
+  labs(x = "Science Score")+
+  labs(y= "Number of students")
+```
+:::
+
+::: callout-note
+## Findings
+
+In all the histogram plots, all subjects show that the expected education chosen by students is mainly degree, followed by masters/diploma. This is no surprisingly as due to higher number of singapore residents aged 25 years and above having diploma/degree: [link](https://www.singstat.gov.sg/publications/reference/ebook/population/education-and-literacy). Students who are taking PISA has expectation of going to a university with the current scores they obtained from the various subjects.
+:::
+
+## 5.4 **Kernel density estimate plot (**Gender and Socioeconomic Status)
+
+I will examine the relationship between gender and socioeconomic status.
+
+```{r, warning=FALSE}
+
+ggplot(data=stu_qqq_SG_3, 
+       aes(x = socioeconomic_status, 
+           colour = gender)) +
+  geom_density()+
+  ggtitle("Distribution of Socioeconomic Status (by Gender)")+
+  labs(x = "Socioeconomic Status - PISA Index")
+```
+
+::: callout-note
+## Findings
+
+The density curve for both gender seems to be left-skewed, this suggests that the mean of the socioecomomic status index is less than the median of the socioeconomic status index.
+
+Female students has a higher socioeconomic status as compared to male students with the peak more to the right compared to male students. However, male students' socioeconomic status has a higher peak compared to female students.
+:::
+
+## 5.5 Scatterplot (Socioeconomic Status and Subjects Score)
+
+I will further examine a potential socioeconomic status with the various subjects score
+
+::: panel-tabset
+## Math
+
+```{r, warning=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= math_average, 
+           y= socioeconomic_status)) +
+  geom_point()+
+  ggtitle("Socioeconomic Status - PISA Index and Maths scores") +
+  labs(x = "Math Score")+
+  labs(y = "Socioeconomic Status - PISA Index")
+
+```
+
+## Reading
+
+```{r, warning=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= read_average, 
+           y= socioeconomic_status)) +
+  geom_point()+
+  ggtitle("Socioeconomic Status - PISA Index and Reading scores") +
+  labs(x = "Reading Score")+
+  labs(y = "Socioeconomic Status - PISA Index")
+```
+
+## Science
+
+```{r, warning=FALSE}
+ggplot(data=stu_qqq_SG_3, 
+       aes(x= sci_average, 
+           y= socioeconomic_status)) +
+  geom_point()+
+  ggtitle("Socioeconomic Status - PISA Index and Science scores") +
+  labs(x = "Science Score")+
+  labs(y = "Socioeconomic Status - PISA Index")
+```
+:::
+
+::: callout-note
+## Findings
+
+Based on all the scatterplots, It seems to suggest that there is no relationship between the subjects and socioeconomic status as the points seems to be randomly scattered. Further tests are needed to examine this.
+:::

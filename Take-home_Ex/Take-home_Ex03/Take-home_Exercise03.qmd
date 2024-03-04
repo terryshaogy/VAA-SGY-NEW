@@ -1,0 +1,152 @@
+---
+title: "Take-home_Exercise03"
+author: "guyue"
+---
+
+# 1.0 Background
+
+### According to an office report as shown in the infographic below
+
+-   The contrast between the wet months (November to January) and dry month (February and June to September) is likely to be more pronounced.
+
+    ![](images/Climate_change.jpg){width="742"}
+
+# 2.0 Task
+
+-   Select either daily temperature or rainfall records of a month of the year 1983, 1993, 2003, 2013 and 2023 and create an analytics-driven data visualisation,
+
+-   Apply appropriate interactive techniques to enhance the user experience in data discovery and/or visual story-telling.
+
+# 3.0 Data preparation
+
+1.0 Read all files (May and December rainfall data from 1983,1993,2003,2013,2023, respectively)
+
+2.0 YMD,YD,YM are generated based on the year, month, and day of the list
+
+3.0 Change the name of Daily Rainfall Total (mm) to DailyRF
+
+```{r}
+pacman::p_load(plotly, ggtern, tidyverse,haven,ggdist, ggridges, ggthemes,
+               colorspace, tidyverse,patchwork)
+```
+
+```{r}
+f198305 <- read_csv("data/198305.csv")
+f198312 <- read_csv("data/198312.csv")
+f199305 <- read_csv("data/199305.csv")
+f199312 <- read_csv("data/199312.csv")
+f200305 <- read_csv("data/200305.csv")
+f200312 <- read_csv("data/200312.csv")
+f201305 <- read_csv("data/201305.csv")
+f201312 <- read_csv("data/201312.csv")
+f202305 <- read_csv("data/202305.csv")
+f202312 <- read_csv("data/202312.csv")
+```
+
+```{R}
+colnames(f202305) <- colnames(f198305)
+colnames(f202312) <- colnames(f198305)
+
+```
+
+```{r}
+combined_data <- rbind(f198305,f202305,f201305,f200305,f199305,f198312,f199312,f200312,f201312,f202312 )
+
+```
+
+```{r}
+combined_data$YMD <- as.Date(paste(combined_data$Year, combined_data$Month, combined_data$Day, sep = "-"), format = "%Y-%m-%d")
+```
+
+```{r}
+combined_data$YM <- paste(combined_data$Year, sprintf("%02d", combined_data$Month), sep = "-")
+```
+
+```{r}
+combined_data$YD <- paste(combined_data$Year, sprintf("%02d", combined_data$Day), sep = "-")
+```
+
+```{r}
+colnames(combined_data)[colnames(combined_data) == "Daily Rainfall Total (mm)"] <- "DailyRF"
+```
+
+# 4.0 Analytics-driven data visualization
+
+This data visualization describes the daily distribution of rainfall in specific locations in May and December in different years.
+
+The chart on the left is a cloud map showing the shape, median, and quartile of the monthly rainfall distribution. From this chart, we can see that in most years there is a relatively large variation in the distribution of rainfall in May and December, but in some years, such as December 2003 and December 2013, the distribution of rainfall appears to be more concentrated, which may indicate that there are some consistent rainfall patterns in these months. At the same time, the highest rainfall in December is higher and more dispersed than in May.
+
+The bar chart on the right shows the frequency of total rainfall in May and December in all the years considered. Each pillar represents either May or December of a particular year, and the height of the pillar represents the number of days in that month with different rainfall levels. From this chart, we can see that over the time frame considered, December seems to generally have more rainy days than May, and in particular, December 2023 has significantly more rainy days.
+
+```{r }
+p1 <- ggplot(combined_data,
+       aes(x = DailyRF,
+           y = YM,
+           fill = factor(stat(quantile))
+           )) +
+  stat_density_ridges(
+    geom = "density_ridges_gradient",
+    calc_ecdf = TRUE, 
+    quantiles = 4,
+    quantile_lines = TRUE) +
+  scale_fill_viridis_d(name = "Quartiles") +
+    xlab(" Daily Rainfall Total (mm)") +
+  ylab("1983-2023") + 
+  ggtitle("Total Daily Rainfall Distribution in May and December each year") 
+  theme_ridges()
+```
+
+```{r}
+combined_clean_data <- subset(combined_data, DailyRF != 0)
+```
+
+```{r}
+p2 <- ggplot(data=combined_clean_data, 
+       aes(x=YM)) +
+  geom_bar()+
+  xlab(" 1983-2023") +
+  ylab("Frequency of Rainfall") + 
+  ggtitle("Rainfall Distribution in May and December each year") 
+```
+
+```{r fig.width=15, fig.height=8}
+p1 + p2
+```
+
+# 5.0 Interactive techniques
+
+Here is a way to help others to interact in a way that allows others to gain a better understanding of rainfall. The first section consists of two sections, the daily rainfall from May 1982,1993,2003,2013,2023, and the right from December. You can click on any point to query, and then it will display the information of this point - year month day + the daily rainfall, in another map will show the same year on the same day of different months of rainfall, and then we can compare.
+
+```{r}
+
+May <- subset(combined_data, Month == 5)
+
+
+Dec <- subset(combined_data, Month == 12)
+
+```
+
+```{r}
+may_data <- subset(combined_data, Month == 5, select = c(Year, Month, Day, DailyRF,YMD,YD))
+new_data <- may_data[, c("Year", "Day", "DailyRF","YMD","YD")]
+names(new_data)[names(new_data) == "DailyRF"] <- "may_DailyRF"
+
+dec_data <- subset(combined_data, Month == 12, select = c(Year, Month, Day, DailyRF,YMD,YD))
+dec_data <- subset(dec_data, select = c(Year, Day, DailyRF,YMD,YD))
+names(dec_data)[names(dec_data) == "DailyRF"] <- "Dec_DailyRF"
+
+new_data <- merge(new_data, dec_data, by = c("Year", "Day"), all = TRUE)
+
+
+
+
+```
+
+```{r}
+pacman::p_load(ggiraph, plotly, 
+               patchwork, DT, tidyverse) 
+```
+
+
+
+
