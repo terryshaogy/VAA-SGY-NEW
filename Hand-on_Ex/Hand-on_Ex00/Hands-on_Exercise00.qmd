@@ -1,0 +1,202 @@
+---
+title: "Hands-on_Exercise01"
+author: "guyue"
+---
+
+1.0 **Installing and loading the required libraries**
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+1.1 **Importing data (csv)**
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+1.2 Check the missing data
+
+```{r}
+exam_data %>%
+  summarise(
+    across(everything(), ~ sum(is.na(.)))
+  )
+```
+
+2.0 ggplot2-plot (geom)
+
+2.1 pointplot
+
+2.1.1 aes(color , size , shape, alpha )
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           ENGLISH))+
+  geom_point(aes(
+    color=CLASS))
+```
+
+2.1.2 geom_smooth (fit line)
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           ENGLISH))+
+  geom_point(aes(color=CLASS))+
+  geom_smooth(method=lm, 
+              size=0.5)
+```
+
+2.2 bar-plot
+
+for discrete data
+
+```{r}
+ggplot(exam_data,
+       aes(CLASS))+
+  geom_bar()
+         
+```
+
+flip
+
+```{r}
+ggplot(exam_data,
+       aes(CLASS))+
+  geom_bar()+
+  coord_flip()
+```
+
+2.3 histogram
+
+for continue data
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS))+
+  geom_histogram()
+```
+
+geom(bin width)
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS))+
+  geom_histogram()
+geom_histogram(binwidth = 5)
+```
+
+ggplot (fill)
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           fill=CLASS))+
+  geom_histogram()
+geom_histogram(binwidth = 1)
+```
+
+geom (position)
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           fill=CLASS))+
+  geom_histogram()+
+  geom_histogram(binwidth = 5,
+               position = "identity")
+```
+
+2.4 density-plot
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           color=RACE))+
+  geom_density()
+```
+
+geom (alpha) ??????
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           color=RACE))+
+  geom_density(alpha=0.2)
+```
+
+2.5 box-plot
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS))+
+  geom_boxplot()
+```
+
+more variables
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           CLASS))+
+  geom_boxplot()
+```
+
+2.6 point-plot
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           ENGLISH))+
+  geom_point()
+```
+
+2.7 **山峦图**
+
+ggridges package install
+
+```{r}
+pacman::p_load("ggridges")
+```
+
+mountain plot
+
+```{r}
+ggplot(exam_data,
+       aes(
+    x = MATHS,
+    y = RACE,
+    fill = CLASS
+  )) +
+  ggridges::geom_density_ridges()
+```
+
+3.0 ggplot2-plot (coordinate)
+
+x,y label
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           ENGLISH))+
+  geom_point(aes(
+    color=CLASS))+
+  scale_x_continuous("maths-scores")+
+  scale_y_continuous("english-scores")
+
+```
+
+坐标轴限制: coord_cartesian(xlim=c(0,100), ylim=c(0,100))
+
+```{r}
+ggplot(exam_data,
+       aes(MATHS,
+           ENGLISH))+
+  geom_point(aes(
+    color=CLASS))+
+  scale_x_continuous("maths-scores")+
+  scale_y_continuous("english-scores")+
+  coord_cartesian(xlim=c(0,100), ylim=c(0,100))
+```
