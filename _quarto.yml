@@ -17,8 +17,10 @@ website:
           href: "Hand-on_Ex/Hand-on_Ex03/Hands-on_Exercise03.html"
         - text: "Hands-on Exercise 4"
           href: "Hand-on_Ex/Hand-on_Ex04/Hands-on_Exercise04.html"
-        - text: "Hands-on Exercise 5"
-          href: "Hand-on_Ex/Hand-on-Ex05/Hands-on_Exercise05.html"
+        - text: "Hands-on Exercise 5.1"
+          href: "Hand-on_Ex/Hand-on-Ex05.1/Hands-on_Exercise05.1.html"
+        - text: "Hands-on Exercise 5.2"
+          href: "Hand-on_Ex/Hand-on-Ex05.2/Hands-on_Exercise05.2.html"
         - text: "Hands-on Exercise 6"
           href: "Hand-on_Ex/Hand-on_Ex06/Hands-on_Exercise06.html"
         - text: "Hands-on Exercise 7"
@@ -42,6 +44,8 @@ website:
           href: "In-class_Ex/In-class_Ex04/In-class_Exercise04.html"
         - text: "In-class Exercise 6"
           href: "In-class_Ex/In-class_Ex06/In-class_Exercise06.html"
+        - text: "In-class Exercise 6"
+          href: "In-class_Ex/In-class_Ex07/In-class_Exercise07.html"
     - text: "Take-home Exercise"
       menu:
         - text: "Take-home Exercise 1"
@@ -50,6 +54,8 @@ website:
           href: "Take-home_Ex/Take-home_Ex02/Take-home_Exercise02.html"
         - text: "Take-home Exercise 3"
           href: "Take-home_Ex/Take-home_Ex03/Take-home_Exercise03.html"
+        - text: "Take-home Exercise 4"
+          href: "Take-home_Ex/Take-home_Ex04/Take-home_Exercise04.html"
     right:
       - href: index.qmd
         text: home

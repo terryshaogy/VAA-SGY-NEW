@@ -1,0 +1,43 @@
+---
+title: "Take-home_Exercise04"
+author: "guyue"
+---
+
+```{r}
+pacman::p_load(tidyverse,dplyr,ggplot2,timetk,lubridate)
+
+```
+
+```{r}
+
+
+# 获取符合条件的文件名
+file_names <- list.files(path = "data/ResidentialRental", pattern = "^20.*\\.csv$", full.names = TRUE)
+
+# 读取所有文件，并同时处理`Postal District`和`No of Bedroom`列
+all_data <- lapply(file_names, function(file) {
+  read_csv(file, show_col_types = FALSE) %>%
+    mutate(
+      `Postal District` = as.character(`Postal District`),
+      `No of Bedroom` = as.numeric(as.character(`No of Bedroom`)),
+      # 假定日期格式为 "Mmm-yy", 例如 "Dec-19"
+      `Lease Commencement Date` = dmy(paste0("01-", `Lease Commencement Date`))
+    )
+})
+
+# 合并所有数据框为一个DataFrame
+combined_data <- bind_rows(all_data)
+
+# 剔除任何含有NA的行
+combined_data <- na.omit(combined_data)
+
+# 选择并重命名特定列，同时使用正确的变量名
+new_data <- combined_data %>%
+  select(
+    PostalDistrict = `Postal District`, 
+    NoOfBedroom = `No of Bedroom`, 
+    MonthlyRent = `Monthly Rent ($)`, 
+    LeaseCommencementDate = `Lease Commencement Date`
+  )
+
+```
