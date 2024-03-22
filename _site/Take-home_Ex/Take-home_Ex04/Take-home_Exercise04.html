@@ -253,8 +253,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-task" id="toc-the-task" class="nav-link active" data-scroll-target="#the-task">The Task ：</a>
+  <ul class="collapse">
+  <li><a href="#pre-process-data" id="toc-pre-process-data" class="nav-link" data-scroll-target="#pre-process-data">1.0 Pre-process Data:</a>
+  <ul class="collapse">
+  <li><a href="#package" id="toc-package" class="nav-link" data-scroll-target="#package">1. 1 Package:</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">1.2 Load Data:</a></li>
+  <li><a href="#reads-all-files-and-handles-the-postal-district-and-no-of-bedroom-columns-simultaneously" id="toc-reads-all-files-and-handles-the-postal-district-and-no-of-bedroom-columns-simultaneously" class="nav-link" data-scroll-target="#reads-all-files-and-handles-the-postal-district-and-no-of-bedroom-columns-simultaneously">1.3 Reads all files and handles the ‘Postal District’ and ‘No of Bedroom’ columns simultaneously</a></li>
+  <li><a href="#merge-all-data-boxes-into-one-dataframe" id="toc-merge-all-data-boxes-into-one-dataframe" class="nav-link" data-scroll-target="#merge-all-data-boxes-into-one-dataframe">1.4 Merge all data boxes into one DataFrame</a></li>
+  <li><a href="#delete-any-lines-that-contain-na" id="toc-delete-any-lines-that-contain-na" class="nav-link" data-scroll-target="#delete-any-lines-that-contain-na">1.5 Delete any lines that contain NA</a></li>
+  <li><a href="#write-the-data-box-or-dataset-named-combined_data-into-a-csv-file-named-rent.csv-so-that-team-members-can-work-on-the-file-together" id="toc-write-the-data-box-or-dataset-named-combined_data-into-a-csv-file-named-rent.csv-so-that-team-members-can-work-on-the-file-together" class="nav-link" data-scroll-target="#write-the-data-box-or-dataset-named-combined_data-into-a-csv-file-named-rent.csv-so-that-team-members-can-work-on-the-file-together">1.6 Write the data box (or dataset) named combined_data into a CSV file named “rent.csv” so that team members can work on the file together</a></li>
+  <li><a href="#load-data-1" id="toc-load-data-1" class="nav-link" data-scroll-target="#load-data-1">1.7 Load Data</a></li>
+  <li><a href="#select-and-rename-columns-to-simplify-subsequent-data-analysis" id="toc-select-and-rename-columns-to-simplify-subsequent-data-analysis" class="nav-link" data-scroll-target="#select-and-rename-columns-to-simplify-subsequent-data-analysis">1.8 Select and rename columns to simplify subsequent data analysis</a></li>
+  <li><a href="#simplification" id="toc-simplification" class="nav-link" data-scroll-target="#simplification">1.9 Simplification</a></li>
+  <li><a href="#merging-two-data-boxes-deleting-rows-containing-na-values-and-conditionally-modifying-the-values-in-the-data-box" id="toc-merging-two-data-boxes-deleting-rows-containing-na-values-and-conditionally-modifying-the-values-in-the-data-box" class="nav-link" data-scroll-target="#merging-two-data-boxes-deleting-rows-containing-na-values-and-conditionally-modifying-the-values-in-the-data-box">2.0 Merging two data boxes, deleting rows containing NA values, and conditionally modifying the values in the data box</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">2.0 Analysis</a>
+  <ul class="collapse">
+  <li><a href="#first-design" id="toc-first-design" class="nav-link" data-scroll-target="#first-design">2.1 First design</a></li>
+  <li><a href="#effect-display" id="toc-effect-display" class="nav-link" data-scroll-target="#effect-display">2.2 Effect display</a></li>
+  <li><a href="#the-problem-with-the-chart-is-that-the-information-is-too-complex-there-are-too-many-overlapping-areas-and-it-is-not-easy-for-readers-to-read." id="toc-the-problem-with-the-chart-is-that-the-information-is-too-complex-there-are-too-many-overlapping-areas-and-it-is-not-easy-for-readers-to-read." class="nav-link" data-scroll-target="#the-problem-with-the-chart-is-that-the-information-is-too-complex-there-are-too-many-overlapping-areas-and-it-is-not-easy-for-readers-to-read."><em>The problem with the chart is that the information is too complex, there are too many overlapping areas, and it is not easy for readers to read.</em></a></li>
+  <li><a href="#the-second-version-of-the-chart-uses-time-series-box-plot." id="toc-the-second-version-of-the-chart-uses-time-series-box-plot." class="nav-link" data-scroll-target="#the-second-version-of-the-chart-uses-time-series-box-plot.">2.3 The second version of the chart uses <em>Time Series Box Plot</em>.</a></li>
+  <li><a href="#introduction-of-time-series-box-plot" id="toc-introduction-of-time-series-box-plot" class="nav-link" data-scroll-target="#introduction-of-time-series-box-plot"><em>Introduction of Time Series Box Plot:</em></a></li>
+  <li><a href="#time-series-box-plot-httpsbusiness-science.github.iotimetkarticlestk04_plotting_time_series.html" id="toc-time-series-box-plot-httpsbusiness-science.github.iotimetkarticlestk04_plotting_time_series.html" class="nav-link" data-scroll-target="#time-series-box-plot-httpsbusiness-science.github.iotimetkarticlestk04_plotting_time_series.html"><em>Time Series Box Plot:</em> https://business-science.github.io/timetk/articles/TK04_Plotting_Time_Series.html</a></li>
+  </ul></li>
+  <li><a href="#advantages" id="toc-advantages" class="nav-link" data-scroll-target="#advantages">Advantages:</a></li>
+  <li><a href="#rotate-the-date-label-to-make-it-vertical-or-tilt-to-reduce-overlap." id="toc-rotate-the-date-label-to-make-it-vertical-or-tilt-to-reduce-overlap." class="nav-link" data-scroll-target="#rotate-the-date-label-to-make-it-vertical-or-tilt-to-reduce-overlap.">1. Rotate the date label to make it vertical or tilt to reduce overlap.</a></li>
+  <li><a href="#use-larger-chart-sizes-to-provide-more-space-for-labels." id="toc-use-larger-chart-sizes-to-provide-more-space-for-labels." class="nav-link" data-scroll-target="#use-larger-chart-sizes-to-provide-more-space-for-labels.">2. Use larger chart sizes to provide more space for labels.</a></li>
+  <li><a href="#showing-only-partial-labels-for-each-time-period-such-as-each-quarter-or-the-first-month-of-the-year." id="toc-showing-only-partial-labels-for-each-time-period-such-as-each-quarter-or-the-first-month-of-the-year." class="nav-link" data-scroll-target="#showing-only-partial-labels-for-each-time-period-such-as-each-quarter-or-the-first-month-of-the-year.">3. Showing only partial labels for each time period, such as each quarter or the first month of the year.</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -276,6 +310,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
     
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">March 22, 2024</p>
+    </div>
+  </div>
     
   </div>
   
@@ -284,41 +324,167 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="the-task" class="level1">
+<h1>The Task ：</h1>
+<p>In this take-home exercise, we are required to select one of the module of your proposed Shiny application and complete the following tasks:</p>
+<p>To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN, To prepare and test the specific R codes can be run and returned the correct output as expected, To determine the parameters and outputs that will be exposed on the Shiny applications, and To select the appropriate Shiny UI components for exposing the parameters determine above.</p>
+<section id="pre-process-data" class="level2">
+<h2 class="anchored" data-anchor-id="pre-process-data">1.0 Pre-process Data:</h2>
+<section id="package" class="level3">
+<h3 class="anchored" data-anchor-id="package">1. 1 Package:</h3>
+<ol type="1">
+<li><p><strong><code>tidyverse</code></strong>: A collection of R packages designed to facilitate data science and data analysis workflows. It includes tools for reading, tidying, analyzing, and visualizing data. Packages within <strong><code>tidyverse</code></strong> work together seamlessly to make data analysis more straightforward.</p></li>
+<li><p><strong><code>ggplot2</code></strong>: Also part of <strong><code>tidyverse</code></strong>, a data visualization package based on the grammar of graphics. It allows users to build complex plots from simple scatter plots to multi-layered graphics with ease.</p></li>
+<li><p><strong><code>lubridate</code></strong>: An R package specifically for dealing with dates and times, simplifying the management of date-time data. It offers functions to parse, manipulate, and perform calculations with date-time objects, simplifying analyses involving dates and times.</p></li>
+<li><p><strong><code>ggthemes</code></strong>: Provides additional themes and scaling options for customizing <strong><code>ggplot2</code></strong> graphics, enhancing the aesthetic appeal of visualizations.</p></li>
+<li><p><strong><code>reactable</code></strong>: For creating interactive data tables, facilitating dynamic data exploration and presentation.</p></li>
+<li><p><strong><code>reactablefmtr</code></strong>: An extension to <strong><code>reactable</code></strong>, offering more custom formatting options for tables, enhancing the readability and functionality of data presentations.</p></li>
+<li><p><strong><code>gt</code></strong>: Designed for creating customizable tables, suitable for data exploration and result sharing, offering a high degree of customization and flexibility.</p></li>
+<li><p><strong><code>gtExtras</code></strong>: An extension of the <strong><code>gt</code></strong> package, providing additional functionalities and conveniences for creating even more detailed and customized tables.</p></li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,dplyr,ggplot2,timetk,lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(lubridate, ggthemes, reactable,reactablefmtr, gt, gtExtras, tidyverse, ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="load-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-data">1.2 Load Data:</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取符合条件的文件名</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/ResidentialRental"</span>, <span class="at">pattern =</span> <span class="st">"^20.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取所有文件，并同时处理`Postal District`和`No of Bedroom`列</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">lapply</span>(file_names, <span class="cf">function</span>(file) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Postal District</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Postal District</span><span class="st">`</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(<span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span>)),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 假定日期格式为 "Mmm-yy", 例如 "Dec-19"</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">dmy</span>(<span class="fu">paste0</span>(<span class="st">"01-"</span>, <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span>))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 合并所有数据框为一个DataFrame</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(all_data)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 剔除任何含有NA的行</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(combined_data)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择并重命名特定列，同时使用正确的变量名</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> combined_data <span class="sc">%&gt;%</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">PostalDistrict =</span> <span class="st">`</span><span class="at">Postal District</span><span class="st">`</span>, </span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">NoOfBedroom =</span> <span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span>, </span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">MonthlyRent =</span> <span class="st">`</span><span class="at">Monthly Rent ($)</span><span class="st">`</span>, </span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">LeaseCommencementDate =</span> <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/ResidentialRental"</span>, <span class="at">pattern =</span> <span class="st">"^20.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="reads-all-files-and-handles-the-postal-district-and-no-of-bedroom-columns-simultaneously" class="level3">
+<h3 class="anchored" data-anchor-id="reads-all-files-and-handles-the-postal-district-and-no-of-bedroom-columns-simultaneously">1.3 Reads all files and handles the ‘Postal District’ and ‘No of Bedroom’ columns simultaneously</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_names <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/ResidentialRental"</span>, <span class="at">pattern =</span> <span class="st">"^20.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">lapply</span>(file_names, <span class="cf">function</span>(file) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Postal District</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.character</span>(<span class="st">`</span><span class="at">Postal District</span><span class="st">`</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(<span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span>)),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">dmy</span>(<span class="fu">paste0</span>(<span class="st">"01-"</span>, <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="merge-all-data-boxes-into-one-dataframe" class="level3">
+<h3 class="anchored" data-anchor-id="merge-all-data-boxes-into-one-dataframe">1.4 Merge all data boxes into one DataFrame</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="delete-any-lines-that-contain-na" class="level3">
+<h3 class="anchored" data-anchor-id="delete-any-lines-that-contain-na">1.5 Delete any lines that contain NA</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(combined_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="write-the-data-box-or-dataset-named-combined_data-into-a-csv-file-named-rent.csv-so-that-team-members-can-work-on-the-file-together" class="level3">
+<h3 class="anchored" data-anchor-id="write-the-data-box-or-dataset-named-combined_data-into-a-csv-file-named-rent.csv-so-that-team-members-can-work-on-the-file-together">1.6 Write the data box (or dataset) named combined_data into a CSV file named “rent.csv” so that team members can work on the file together</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(combined_data, <span class="st">"rent.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="load-data-1">1.7 Load Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rental <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/rent.csv"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="select-and-rename-columns-to-simplify-subsequent-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="select-and-rename-columns-to-simplify-subsequent-data-analysis">1.8 Select and rename columns to simplify subsequent data analysis</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rentalnew <span class="ot">&lt;-</span> rental <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">NoOfBedroom =</span> <span class="st">`</span><span class="at">No of Bedroom</span><span class="st">`</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">MonthlyRent =</span> <span class="st">`</span><span class="at">Monthly Rent ($)</span><span class="st">`</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ProjectName1 =</span> <span class="st">`</span><span class="at">Project Name</span><span class="st">`</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">LeaseCommencementDate =</span> <span class="st">`</span><span class="at">Lease Commencement Date</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simplification" class="level3">
+<h3 class="anchored" data-anchor-id="simplification">1.9 Simplification</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>postdistrictdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/realis2018.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">PlanningArea =</span> <span class="st">"Planning Area"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ProjectName2 =</span> <span class="st">"Project Name"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="merging-two-data-boxes-deleting-rows-containing-na-values-and-conditionally-modifying-the-values-in-the-data-box" class="level3">
+<h3 class="anchored" data-anchor-id="merging-two-data-boxes-deleting-rows-containing-na-values-and-conditionally-modifying-the-values-in-the-data-box">2.0 Merging two data boxes, deleting rows containing NA values, and conditionally modifying the values in the data box</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Retentialdatamerged <span class="ot">&lt;-</span> rentalnew <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(postdistrictdata, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ProjectName1"</span> <span class="ot">=</span> <span class="st">"ProjectName2"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlanningArea =</span> <span class="fu">case_when</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    PlanningArea <span class="sc">==</span> <span class="st">"YISHUN"</span> <span class="sc">~</span> <span class="st">"Yishun"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> PlanningArea </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  )) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">2.0 Analysis</h2>
+<section id="first-design" class="level3">
+<h3 class="anchored" data-anchor-id="first-design">2.1 First design</h3>
+<p><img src="images/微信图片_20240322140351.jpg" class="img-fluid"></p>
+</section>
+<section id="effect-display" class="level3">
+<h3 class="anchored" data-anchor-id="effect-display">2.2 Effect display</h3>
+<p><img src="images/微信图片_20240322142941.png" class="img-fluid"></p>
+</section>
+<section id="the-problem-with-the-chart-is-that-the-information-is-too-complex-there-are-too-many-overlapping-areas-and-it-is-not-easy-for-readers-to-read." class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-with-the-chart-is-that-the-information-is-too-complex-there-are-too-many-overlapping-areas-and-it-is-not-easy-for-readers-to-read."><em>The problem with the chart is that the information is too complex, there are too many overlapping areas, and it is not easy for readers to read.</em></h3>
+</section>
+<section id="the-second-version-of-the-chart-uses-time-series-box-plot." class="level3">
+<h3 class="anchored" data-anchor-id="the-second-version-of-the-chart-uses-time-series-box-plot.">2.3 The second version of the chart uses <em>Time Series Box Plot</em>.</h3>
+</section>
+<section id="introduction-of-time-series-box-plot" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-of-time-series-box-plot"><em>Introduction of Time Series Box Plot:</em></h3>
+<p><img src="images/微信图片_20240322143324.jpg" class="img-fluid" width="912"></p>
+</section>
+<section id="time-series-box-plot-httpsbusiness-science.github.iotimetkarticlestk04_plotting_time_series.html" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-box-plot-httpsbusiness-science.github.iotimetkarticlestk04_plotting_time_series.html"><em>Time Series Box Plot:</em> <a href="https://business-science.github.io/timetk/articles/TK04_Plotting_Time_Series.html" class="uri">https://business-science.github.io/timetk/articles/TK04_Plotting_Time_Series.html</a></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Retentialdatamerged<span class="sc">$</span>LeaseCommencementDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(Retentialdatamerged<span class="sc">$</span>LeaseCommencementDate)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Retentialdatamerged<span class="sc">$</span>YearMonth <span class="ot">&lt;-</span> <span class="fu">format</span>(Retentialdatamerged<span class="sc">$</span>LeaseCommencementDate, <span class="st">"%Y-%m"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ang_mo_kio_data <span class="ot">&lt;-</span> Retentialdatamerged <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PlanningArea <span class="sc">==</span> <span class="st">"Ang Mo Kio"</span>, NoOfBedroom <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ang_mo_kio_data, <span class="fu">aes</span>(<span class="at">x =</span> YearMonth, <span class="at">y =</span> MonthlyRent)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Monthly Rent for 1 Bedroom in Ang Mo Kio by Month"</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month by Year"</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Monthly Rent $"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Exercise04_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="advantages" class="level2">
+<h2 class="anchored" data-anchor-id="advantages">Advantages:</h2>
+</section>
+<section id="rotate-the-date-label-to-make-it-vertical-or-tilt-to-reduce-overlap." class="level2">
+<h2 class="anchored" data-anchor-id="rotate-the-date-label-to-make-it-vertical-or-tilt-to-reduce-overlap.">1. Rotate the date label to make it vertical or tilt to reduce overlap.</h2>
+</section>
+<section id="use-larger-chart-sizes-to-provide-more-space-for-labels." class="level2">
+<h2 class="anchored" data-anchor-id="use-larger-chart-sizes-to-provide-more-space-for-labels.">2. Use larger chart sizes to provide more space for labels.</h2>
+</section>
+<section id="showing-only-partial-labels-for-each-time-period-such-as-each-quarter-or-the-first-month-of-the-year." class="level2">
+<h2 class="anchored" data-anchor-id="showing-only-partial-labels-for-each-time-period-such-as-each-quarter-or-the-first-month-of-the-year.">3. Showing only partial labels for each time period, such as each quarter or the first month of the year.</h2>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -1,43 +1,161 @@
 ---
 title: "Take-home_Exercise04"
 author: "guyue"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
 ---
 
-```{r}
-pacman::p_load(tidyverse,dplyr,ggplot2,timetk,lubridate)
+# The Task ：
 
+In this take-home exercise, we are required to select one of the module of your proposed Shiny application and complete the following tasks:
+
+To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN, To prepare and test the specific R codes can be run and returned the correct output as expected, To determine the parameters and outputs that will be exposed on the Shiny applications, and To select the appropriate Shiny UI components for exposing the parameters determine above.
+
+## 1.0 Pre-process Data:
+
+### 1. 1 Package:
+
+1.  **`tidyverse`**: A collection of R packages designed to facilitate data science and data analysis workflows. It includes tools for reading, tidying, analyzing, and visualizing data. Packages within **`tidyverse`** work together seamlessly to make data analysis more straightforward.
+
+2.  **`ggplot2`**: Also part of **`tidyverse`**, a data visualization package based on the grammar of graphics. It allows users to build complex plots from simple scatter plots to multi-layered graphics with ease.
+
+3.  **`lubridate`**: An R package specifically for dealing with dates and times, simplifying the management of date-time data. It offers functions to parse, manipulate, and perform calculations with date-time objects, simplifying analyses involving dates and times.
+
+4.  **`ggthemes`**: Provides additional themes and scaling options for customizing **`ggplot2`** graphics, enhancing the aesthetic appeal of visualizations.
+
+5.  **`reactable`**: For creating interactive data tables, facilitating dynamic data exploration and presentation.
+
+6.  **`reactablefmtr`**: An extension to **`reactable`**, offering more custom formatting options for tables, enhancing the readability and functionality of data presentations.
+
+7.  **`gt`**: Designed for creating customizable tables, suitable for data exploration and result sharing, offering a high degree of customization and flexibility.
+
+8.  **`gtExtras`**: An extension of the **`gt`** package, providing additional functionalities and conveniences for creating even more detailed and customized tables.
+
+```{r}
+pacman::p_load(lubridate, ggthemes, reactable,reactablefmtr, gt, gtExtras, tidyverse, ggplot2)
 ```
 
+### 1.2 Load Data:
+
+```{r}
+file_names <- list.files(path = "data/ResidentialRental", pattern = "^20.*\\.csv$", full.names = TRUE)
+```
+
+### 1.3 Reads all files and handles the 'Postal District' and 'No of Bedroom' columns simultaneously
+
 ```{r}
 
-
-# 获取符合条件的文件名
 file_names <- list.files(path = "data/ResidentialRental", pattern = "^20.*\\.csv$", full.names = TRUE)
 
-# 读取所有文件，并同时处理`Postal District`和`No of Bedroom`列
 all_data <- lapply(file_names, function(file) {
   read_csv(file, show_col_types = FALSE) %>%
     mutate(
       `Postal District` = as.character(`Postal District`),
       `No of Bedroom` = as.numeric(as.character(`No of Bedroom`)),
-      # 假定日期格式为 "Mmm-yy", 例如 "Dec-19"
       `Lease Commencement Date` = dmy(paste0("01-", `Lease Commencement Date`))
     )
 })
-
-# 合并所有数据框为一个DataFrame
-combined_data <- bind_rows(all_data)
-
-# 剔除任何含有NA的行
-combined_data <- na.omit(combined_data)
-
-# 选择并重命名特定列，同时使用正确的变量名
-new_data <- combined_data %>%
-  select(
-    PostalDistrict = `Postal District`, 
-    NoOfBedroom = `No of Bedroom`, 
-    MonthlyRent = `Monthly Rent ($)`, 
-    LeaseCommencementDate = `Lease Commencement Date`
-  )
-
 ```
+
+### 1.4 Merge all data boxes into one DataFrame
+
+```{r}
+combined_data <- bind_rows(all_data)
+```
+
+### 1.5 Delete any lines that contain NA
+
+```{r}
+combined_data <- na.omit(combined_data)
+```
+
+### 1.6 Write the data box (or dataset) named combined_data into a CSV file named "rent.csv" so that team members can work on the file together
+
+```{r}
+write.csv(combined_data, "rent.csv", row.names = FALSE)
+```
+
+### 1.7 Load Data
+
+```{r}
+rental <- read_csv("data/rent.csv") 
+```
+
+### 1.8 Select and rename columns to simplify subsequent data analysis
+
+```{r}
+rentalnew <- rental %>%
+  select(
+    NoOfBedroom = `No of Bedroom`, 
+    MonthlyRent = `Monthly Rent ($)`,
+    ProjectName1 = `Project Name`,
+    LeaseCommencementDate = `Lease Commencement Date`)
+```
+
+### 1.9 Simplification
+
+```{r}
+postdistrictdata <- read_csv("data/realis2018.csv") %>%
+  select(PlanningArea = "Planning Area",
+         ProjectName2 = "Project Name") %>%
+  distinct()
+```
+
+### 2.0 Merging two data boxes, deleting rows containing NA values, and conditionally modifying the values in the data box
+
+```{r}
+Retentialdatamerged <- rentalnew %>%
+  left_join(postdistrictdata, by = c("ProjectName1" = "ProjectName2")) %>%
+  drop_na() %>%
+  mutate(PlanningArea = case_when(
+    PlanningArea == "YISHUN" ~ "Yishun",
+    TRUE ~ PlanningArea 
+  )) 
+```
+
+## 2.0 Analysis
+
+### 2.1 First design
+
+![](images/微信图片_20240322140351.jpg)
+
+### 2.2 Effect display
+
+![](images/微信图片_20240322142941.png)
+
+### *The problem with the chart is that the information is too complex, there are too many overlapping areas, and it is not easy for readers to read.*
+
+### 2.3 The second version of the chart uses *Time Series Box Plot*.
+
+### *Introduction of Time Series Box Plot:*
+
+![](images/微信图片_20240322143324.jpg){width="912"}
+
+### *Time Series Box Plot:* <https://business-science.github.io/timetk/articles/TK04_Plotting_Time_Series.html>
+
+```{r, warning=FALSE}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+Retentialdatamerged$LeaseCommencementDate <- as.Date(Retentialdatamerged$LeaseCommencementDate)
+Retentialdatamerged$YearMonth <- format(Retentialdatamerged$LeaseCommencementDate, "%Y-%m")
+ang_mo_kio_data <- Retentialdatamerged %>%
+  filter(PlanningArea == "Ang Mo Kio", NoOfBedroom == 1)
+ggplot(ang_mo_kio_data, aes(x = YearMonth, y = MonthlyRent)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Boxplot of Monthly Rent for 1 Bedroom in Ang Mo Kio by Month",
+       x = "Month by Year",
+       y = "Monthly Rent $") 
+```
+
+## Advantages:
+
+## 1. Rotate the date label to make it vertical or tilt to reduce overlap.
+
+## 2. Use larger chart sizes to provide more space for labels.
+
+## 3. Showing only partial labels for each time period, such as each quarter or the first month of the year.
