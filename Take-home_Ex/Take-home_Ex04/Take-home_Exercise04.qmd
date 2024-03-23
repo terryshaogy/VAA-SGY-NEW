@@ -152,10 +152,66 @@ ggplot(ang_mo_kio_data, aes(x = YearMonth, y = MonthlyRent)) +
        y = "Monthly Rent $") 
 ```
 
-## Advantages:
+### Advantages:
 
-## 1. Rotate the date label to make it vertical or tilt to reduce overlap.
+### 1. Rotate the date label to make it vertical or tilt to reduce overlap.
 
-## 2. Use larger chart sizes to provide more space for labels.
+### 2. Use larger chart sizes to provide more space for labels.
 
-## 3. Showing only partial labels for each time period, such as each quarter or the first month of the year.
+### 3. Showing only partial labels for each time period, such as each quarter or the first month of the year.
+
+## 2.4 : Promotion
+
+```{r}
+Retentialdatamerged$LeaseCommencementDate <- as.Date(Retentialdatamerged$LeaseCommencementDate)
+Retentialdatamerged$YearMonth <- format(Retentialdatamerged$LeaseCommencementDate, "%Y-%m")
+Retentialdatamerged$YearMonthDate <- as.Date(paste0(Retentialdatamerged$YearMonth, "-01"))
+rental_data <- Retentialdatamerged %>%
+  filter(PlanningArea == "Bedok", NoOfBedroom == 3)
+```
+
+```{r}
+monthly_median <- aggregate(MonthlyRent ~ YearMonth, data = rental_data, median)
+highest_median_month <- monthly_median$YearMonth[which.max(monthly_median$MonthlyRent)]
+ggplot(rental_data, aes(x = YearMonth, y = MonthlyRent)) +
+  geom_boxplot() +
+  geom_smooth(method = "loess", colour = "blue", fill = "grey", alpha = 0.5, size = 1, aes(group = 1)) + 
+  stat_summary(fun = median, geom = "line", colour = "red", size = 1, aes(group = 1)) +
+  geom_vline(xintercept = highest_median_month, color = "red", linetype = "dashed", size = 1) + 
+  theme_minimal() +
+  labs(title = "Monthly Rent for 3 Bedrooms in Bedok",
+       x = "Month by Year",
+       y = "Monthly Rent $") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+### Both charts show the distribution of rent data for different apartment types, and both use box plots. Box plots are a standardized way of showing data distribution based on five-number generalizations (minimum, first quartile (Q1), median, third quartile (Q3), maximum).
+
+### The first chart shows the distribution of monthly rents for one-bedroom apartments in Ang Mo Kio over a period of months and years. It can be seen that the median rent has fluctuated over time, but the overall trend is not very clear. In addition, some outliers can be seen, which indicate that some months have abnormally high or low rents.
+
+### The second chart shows the distribution of monthly rents for three-bedroom apartments in the Bedok area. In addition to the box chart, this chart also includes a smooth trendline (blue line) of the data, which reveals the overall trend of rents over time. In addition, there is a dotted red line on the chart that may represent a specific point in time or stage when the data is analyzed.
+
+## 2.5: Combine all areas: Median Monthly Rent by Planning Area Over Time for 3 .
+
+```{r}
+stats_by_area_and_date <- Retentialdatamerged %>%
+  group_by(PlanningArea, YearMonth, NoOfBedroom) %>%
+  summarise(
+    MinRent = min(MonthlyRent, na.rm = TRUE),
+    MaxRent = max(MonthlyRent, na.rm = TRUE),
+    MedianRent = median(MonthlyRent, na.rm = TRUE),
+    .groups = "drop")
+roomline <- stats_by_area_and_date %>% filter(NoOfBedroom == 3)
+highest_rent <- max(roomline$MedianRent, na.rm = TRUE)
+highest_rent_month <- roomline$YearMonth[roomline$MedianRent == highest_rent]
+
+ggplot(roomline, aes(x = YearMonth, y = MedianRent, group = PlanningArea, color = PlanningArea)) +
+  geom_line() +
+  geom_vline(xintercept = highest_rent_month, color = "red", linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Median Monthly Rent by Planning Area Over Time for 3 Bedrooms",
+       x = "Month by Year",
+       y = "Median Monthly Rent ($)") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_color_viridis_d()
+```
