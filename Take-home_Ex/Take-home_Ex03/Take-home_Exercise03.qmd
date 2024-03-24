@@ -1,6 +1,10 @@
 ---
 title: "Take-home_Exercise03"
 author: "guyue"
+execute: 
+  eval: true
+  echo: true
+  warning: false
 ---
 
 # 1.0 Background
@@ -74,9 +78,19 @@ colnames(combined_data)[colnames(combined_data) == "Daily Rainfall Total (mm)"] 
 
 This data visualization describes the daily distribution of rainfall in specific locations in May and December in different years.
 
-The chart on the left is a cloud map showing the shape, median, and quartile of the monthly rainfall distribution. From this chart, we can see that in most years there is a relatively large variation in the distribution of rainfall in May and December, but in some years, such as December 2003 and December 2013, the distribution of rainfall appears to be more concentrated, which may indicate that there are some consistent rainfall patterns in these months. At the same time, the highest rainfall in December is higher and more dispersed than in May.
+First, I chose cloud maps and bar charts to show the precipitation distribution in May and December of each selected year.
 
-The bar chart on the right shows the frequency of total rainfall in May and December in all the years considered. Each pillar represents either May or December of a particular year, and the height of the pillar represents the number of days in that month with different rainfall levels. From this chart, we can see that over the time frame considered, December seems to generally have more rainy days than May, and in particular, December 2023 has significantly more rainy days.
+The graph on the [left]{.underline} is a ridge plot showing the distribution density of daily rainfall in May and December in different years. As you can see from this graph, the distribution of rainfall varies significantly from year to year. For each time period (such as May 1983, December 1983, etc.), the ridge plot shows the density distribution of rainfall for that month, with the peak indicating the range with the highest frequency of rainfall for that month. The color code represents the rainfall quartile, and most of the peaks are concentrated in the lower rainfall range, but there are a few years in December with high rainfall frequency peaks.
+
+From the left, most of the rainfall in May rarely exceeds 75mm, on the contrary, the rainfall in December will be more widely distributed, and there will be heavy rainfall.
+
+On the [right]{.underline} is the distribution of rainfall days.  There is a large gap between the rainfall days of May and December in 1983,2003,2023, while the gap between 1993 and 2013 is not very large.
+
+It can also be seen that in the same month of May, but after 1993, the annual rainfall did not show an increase in the number of rain days, which may be related to the hot weather.  
+
+From December 1983 to 2023, the number of days of rainfall every year is increasing, especially in December 2023, when it rains almost every day.  
+
+The number of days of rainfall in May is fluctuating, but the number of days of rainfall in December is increasing, resulting in a growing gap between the number of days of rainfall between May and December.
 
 ```{r }
 p1 <- ggplot(combined_data,
@@ -115,7 +129,7 @@ p1 + p2
 
 # 5.0 Interactive techniques
 
-Here is a way to help others to interact in a way that allows others to gain a better understanding of rainfall. The first section consists of two sections, the daily rainfall from May 1982,1993,2003,2013,2023, and the right from December. You can click on any point to query, and then it will display the information of this point - year month day + the daily rainfall, in another map will show the same year on the same day of different months of rainfall, and then we can compare.
+## Here is a way to help others to interact in a way that allows others to gain a better understanding of rainfall. The first section consists of two sections, the daily rainfall from May 1982,1993,2003,2013,2023, and the right from December. You can click on any point to query, and then it will display the information of this point - year month day + the daily rainfall, in another map will show the same year on the same day of different months of rainfall, and then we can compare.
 
 ```{r}
 
@@ -147,6 +161,68 @@ pacman::p_load(ggiraph, plotly,
                patchwork, DT, tidyverse) 
 ```
 
+## Model1: Here is the interactive system I made \-\-\-- in the same year and the same day, to see the difference in rainfall in different months (5 and 12), the right is December, the left is May. For example, as shown in the picture, when you click on any point, it reflects the rainfall from December to 20, 1993(right), and the rainfall from May 20, 1993（left）-so that you can use this system to find the rainfall of the same year on the same day and different months. The downside of this is that when I click on the left side, it only shows the right side but not the right side, even though I've filled in the code for the right side to show the content.
+
+```{r}
+new_data$tooltip1 <- c(paste0(     
+  "DATE = ", new_data$YMD.x, 
+  "\n Daily Rainfall = ", new_data$may_DailyRF)) 
+
+new_data$tooltip2 <- c(paste0(     
+  "DATE = ", new_data$YMD.y, 
+  "\n Daily Rainfall = ", new_data$Dec_DailyRF)) 
+
+
+p10 <- ggplot(new_data, 
+       aes(x = Day,
+           y = may_DailyRF)) +
+  geom_point_interactive(
+    aes(data_id = YD.x,
+        tooltip = new_data$tooltip1), 
+    stackgroups = TRUE,
+    binwidth = 1) +   
+   xlab(" Day") +
+  ylab("Total Daily Rainfall") + 
+  ggtitle("Daily Rainfall in May") 
 
 
 
+p20 <- ggplot(new_data, 
+       aes(x = Day,
+           y = Dec_DailyRF)) +
+  geom_point_interactive(
+    aes(data_id = YD.x,
+        tooltip = new_data$tooltip2), 
+    stackgroups = TRUE,
+    binwidth = 1) +   
+ xlab(" Day") +
+  ylab("Total Daily Rainfall") + 
+  ggtitle("Daily Rainfall in Dec") 
+
+girafe(code = print(p10 + p20), 
+       width_svg = 6,
+       height_svg = 3
+       ) 
+
+```
+
+## Model2: So I plan to use another method to improve it, and I use the following system. This interactive system can indeed improve the above shortcomings. Now I can display content on both the left and right sides, but I cannot add more information, such as modifying the horizontal coordinate title and so on. So I kept these two interactive systems, and that's my design.
+
+```{r}
+d <- highlight_key(new_data)
+p1 <- ggplot(data=d, 
+            aes(x = Day,
+                y = may_DailyRF)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,40),
+                  ylim=c(0,200))
+
+p2 <- ggplot(data=d, 
+            aes(x =Day,
+                y = Dec_DailyRF)) +
+  geom_point(size=1) +
+  coord_cartesian(xlim=c(0,40),
+                  ylim=c(0,200))
+subplot(ggplotly(p1),
+        ggplotly(p2))
+```
