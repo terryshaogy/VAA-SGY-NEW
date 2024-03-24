@@ -124,7 +124,7 @@ Note that:
 
 ### **14.5.2 Data trasformation**
 
-When analysing multivariate data set, it is very common that the variables in the data sets includes values that reflect different types of measurement. In general, these variables\' values have their own range. In order to ensure that all the variables have comparable values, data transformation are commonly used before clustering.
+When analysing multivariate data set, it is very common that the variables in the data sets includes values that reflect different types of measurement. In general, these variables' values have their own range. In order to ensure that all the variables have comparable values, data transformation are commonly used before clustering.
 
 Three main data transformation methods are supported by *heatmaply()*, namely: scale, normalise and percentilse.
 
@@ -165,19 +165,19 @@ heatmaply(percentize(wh_matrix[, -c(1, 2, 4, 5)]))
 
 **heatmaply** supports a variety of hierarchical clustering algorithm. The main arguments provided are:
 
--   *distfun*: function used to compute the distance (dissimilarity) between both rows and columns. Defaults to dist. The options \"pearson\", \"spearman\" and \"kendall\" can be used to use correlation-based clustering, which uses as.dist(1 - cor(t(x))) as the distance metric (using the specified correlation method).
+-   *distfun*: function used to compute the distance (dissimilarity) between both rows and columns. Defaults to dist. The options "pearson", "spearman" and "kendall" can be used to use correlation-based clustering, which uses as.dist(1 - cor(t(x))) as the distance metric (using the specified correlation method).
 
 -   *hclustfun*: function used to compute the hierarchical clustering when *Rowv* or *Colv* are not dendrograms. Defaults to *hclust*.
 
--   *dist_method* default is NULL, which results in \"euclidean\" to be used. It can accept alternative character strings indicating the method to be passed to distfun. By default *distfun* is \"dist\"\" hence this can be one of \"euclidean\", \"maximum\", \"manhattan\", \"canberra\", \"binary\" or \"minkowski\".
+-   *dist_method* default is NULL, which results in "euclidean" to be used. It can accept alternative character strings indicating the method to be passed to distfun. By default *distfun* is "dist"" hence this can be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".
 
--   *hclust_method* default is NULL, which results in \"complete\" method to be used. It can accept alternative character strings indicating the method to be passed to *hclustfun*. By default hclustfun is hclust hence this can be one of \"ward.D\", \"ward.D2\", \"single\", \"complete\", \"average\" (= UPGMA), \"mcquitty\" (= WPGMA), \"median\" (= WPGMC) or \"centroid\" (= UPGMC).
+-   *hclust_method* default is NULL, which results in "complete" method to be used. It can accept alternative character strings indicating the method to be passed to *hclustfun*. By default hclustfun is hclust hence this can be one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
 
 In general, a clustering model can be calibrated either manually or statistically.
 
 ### **14.5.4 Manual approach**
 
-In the code chunk below, the heatmap is plotted by using hierachical clustering algorithm with \"Euclidean distance\" and \"ward.D\" method.
+In the code chunk below, the heatmap is plotted by using hierachical clustering algorithm with "Euclidean distance" and "ward.D" method.
 
 ```{r}
 heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
@@ -199,10 +199,9 @@ wh_d <- dist(normalize(wh_matrix[, -c(1, 2, 4, 5)]), method = "euclidean") dend_
   dist_methods hclust_methods     optim 1      unknown         ward.D 0.6137851 2      unknown        ward.D2 0.6289186 3      unknown         single 0.4774362 4      unknown       complete 0.6434009 5      unknown        average 0.6701688 6      unknown       mcquitty 0.5020102 7      unknown         median 0.5901833 8      unknown       centroid 0.6338734
 ```
 
-The output table shows that \"average\" method should be used because it gave the high optimum value.
+The output table shows that "average" method should be used because it gave the high optimum value.
 
 Next, *find_k()* is used to determine the optimal number of cluster.
-
 
 ```{r}
 heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
